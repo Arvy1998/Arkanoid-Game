@@ -1,5 +1,5 @@
 const canvasWidth = 1521;
-const canvasHeight = 650;
+const canvasHeight = 720;
 const ballRadioLength = 25;
 let ballXPosition = 50;
 let ballYPosition = 50;
