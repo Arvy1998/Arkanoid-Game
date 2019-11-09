@@ -2,7 +2,7 @@ const canvasWidth = 1520;
 const canvasHeight = 720;
 const ballRadioLength = 24;
 let ballXPosition = 500;
-let ballYPosition = 320;
+let ballYPosition = 300;
 let ballXAxisSpeed = 6;
 let ballYAxisSpeed = 6;
 let padWidth = 150;
@@ -51,8 +51,15 @@ const isBallHitPad = function() {
 }
 
 const isBallHitFloor = function() {
-    if ((ballYPosition + ballRadioLength / 2 >= canvasHeight)
-     || (ballYPosition - ballRadioLength / 2 <= 0)) {
+    if (ballYPosition + ballRadioLength / 2 >= canvasHeight) {
+        return true;
+    }
+    return false;
+}
+
+const isBallHitCeiling = function() {
+    if ((ballYPosition + ballRadioLength / 2 <= 0)
+    || (ballYPosition + ballRadioLength / 2 >= canvasHeight)) {
         return true;
     }
     return false;
@@ -72,18 +79,30 @@ const controlBall = function() {
     }
 
     if (isBallHitFloor()) {
-        ballYAxisSpeed = ballYAxisSpeed * -1;
+        if (confirm('Game Over!')) {
+            window.location.reload();
+        } 
+    }
+
+    if (isBallHitCeiling()) {
+        ballXAxisSpeed = ballXAxisSpeed * -1;
     }
 }
 
 const controlPad = function() {
     if (isBallHitPad()) {
+        ballYAxisSpeed = ballYAxisSpeed * -1;
         controlBallSpeed();
     }
 }
 
 const controlBallSpeed = function() {
-    
+    if (ballYPosition + ballRadioLength < padWidth / 3) {
+        ballYAxisSpeed = -7;
+    } else if ((ballYPosition + ballRadioLength > padWidth / 3)
+        && (ballYPosition + ballRadioLength < padWidth / 2)) {
+        ballYAxisSpeed = -5;  
+    } else ballYAxisSpeed = -7;
 }
 
 const drawBricks = function() {
@@ -96,9 +115,14 @@ const drawBricks = function() {
 
 const placeAndHideBricks = function(i, j) {
     if (brickMap[i][j] === true) {
-        if ((ballYPosition - ballRadioLength / 2 < j * brickHeight)
-        && (ballXPosition - ballRadioLength / 2 > i * brickWidth)
-        && (ballXPosition + ballRadioLength / 2 <= (i + 1) * brickWidth)) {
+        // if (((ballYPosition - ballRadioLength <= j * brickHeight)
+        // && (ballXPosition - ballRadioLength >= (j + 1) * brickHeight))
+        // && ((ballXPosition + ballRadioLength >= i * brickWidth)
+        // && (ballXPosition + ballRadioLength <= (i + 1) * brickWidth))) {
+        if ((ballXPosition + ballRadioLength / 2 >= brickWidth * i)
+          && (ballXPosition + ballRadioLength / 2 <= brickWidth * (i + 1))
+          && (ballYPosition + ballRadioLength / 2 >= brickHeight * j)
+          && (ballYPosition + ballRadioLength / 2 <= brickHeight * (j + 1))) {
             ballYAxisSpeed = ballYAxisSpeed * -1;
             brickMap[i][j] = false;
         } else {
