@@ -1,21 +1,23 @@
-const canvasWidth = 1521;
+const canvasWidth = 1520;
 const canvasHeight = 720;
 const ballRadioLength = 24;
-let ballXPosition = 50;
-let ballYPosition = 50;
-let ballXAxisSpeed = 5;
-let ballYAxisSpeed = 5;
+let ballXPosition = 500;
+let ballYPosition = 320;
+let ballXAxisSpeed = 6;
+let ballYAxisSpeed = 6;
 let padWidth = 150;
 let padHeight = 5;
 let padXPossition = (canvasWidth / 2) - (padWidth / 2);
 let padYPossition = canvasHeight - 25;
-let brickWidth = 100;
 let brickHeight = 30;
-let numberOfBricksRows = 15;
+let numberOfBricksRows = 12;
+let brickWidth = (canvasWidth / numberOfBricksRows);
 let numberOfBricksCollumns = 4;
+let brickMap;
 
 void setup() {
     size(canvasWidth, canvasHeight);
+    initBrickMap();
 };
 
 void draw() {
@@ -76,21 +78,50 @@ const controlBall = function() {
 
 const controlPad = function() {
     if (isBallHitPad()) {
-        ballYAxisSpeed = ballYAxisSpeed * -1;
+        controlBallSpeed();
     }
+}
+
+const controlBallSpeed = function() {
+    
 }
 
 const drawBricks = function() {
     for (let i = 0; i < numberOfBricksRows; i++) {
         for (let j = 0; j < numberOfBricksCollumns; j++) {
-            fill(0, 255, 0);
-            rect((brickWidth * i) + 6, (brickHeight * j) + 6, brickWidth, brickHeight);
+            placeAndHideBricks(i, j);
         }
     }
-
-    controlBricks();
 }
 
-const controlBricks = function() {
+const placeAndHideBricks = function(i, j) {
+    if (brickMap[i][j] === true) {
+        if ((ballYPosition - ballRadioLength / 2 < j * brickHeight)
+        && (ballXPosition - ballRadioLength / 2 > i * brickWidth)
+        && (ballXPosition + ballRadioLength / 2 <= (i + 1) * brickWidth)) {
+            ballYAxisSpeed = ballYAxisSpeed * -1;
+            brickMap[i][j] = false;
+        } else {
+            fill(0, 255, 0);
+            rect((brickWidth * i), (brickHeight * j), brickWidth - 1, brickHeight - 1);
+        }
+    }
+}
 
+const initBrickMap = function() {
+    let matrix = createMatrix(numberOfBricksRows, numberOfBricksCollumns);
+    for (let i = 0; i < numberOfBricksRows; i++) {
+        for (let j = 0; j < numberOfBricksCollumns; j++) {
+            matrix[i][j] = true;
+        }
+    }
+    brickMap = matrix;
+}
+
+const createMatrix = function(rows, columns) {
+    let emptyMatrix = new Array(rows).fill(null);
+    for (let i = 0; i < rows; i++) {
+        emptyMatrix[i] = new Array(columns).fill(null);
+    }
+    return emptyMatrix;
 }
