@@ -51,14 +51,14 @@ const isBallHitPad = function() {
 }
 
 const isBallHitFloor = function() {
-    if (ballYPosition + ballRadioLength / 2 >= canvasHeight) {
+    if (ballYPosition + ballRadioLength / 2 > canvasHeight) {
         return true;
     }
     return false;
 }
 
 const isBallHitCeiling = function() {
-    if ((ballYPosition + ballRadioLength / 2 <= 0)
+    if ((ballYPosition - ballRadioLength / 2 <= 0)
     || (ballYPosition + ballRadioLength / 2 >= canvasHeight)) {
         return true;
     }
@@ -115,10 +115,6 @@ const drawBricks = function() {
 
 const placeAndHideBricks = function(i, j) {
     if (brickMap[i][j] === true) {
-        // if (((ballYPosition - ballRadioLength <= j * brickHeight)
-        // && (ballXPosition - ballRadioLength >= (j + 1) * brickHeight))
-        // && ((ballXPosition + ballRadioLength >= i * brickWidth)
-        // && (ballXPosition + ballRadioLength <= (i + 1) * brickWidth))) {
         if ((ballXPosition + ballRadioLength / 2 >= brickWidth * i)
           && (ballXPosition + ballRadioLength / 2 <= brickWidth * (i + 1))
           && (ballYPosition + ballRadioLength / 2 >= brickHeight * j)
