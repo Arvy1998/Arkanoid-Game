@@ -14,6 +14,7 @@ let numberOfBricksRows = 12;
 let brickWidth = (canvasWidth / numberOfBricksRows);
 let numberOfBricksCollumns = 4;
 let brickMap;
+let gameStarted = false;
 
 void setup() {
     size(canvasWidth, canvasHeight);
@@ -25,9 +26,22 @@ void draw() {
    drawBall();
    drawPad();
    drawBricks();
-   ballXPosition = ballXPosition + ballXAxisSpeed;
-   ballYPosition = ballYPosition + ballYAxisSpeed;
+   determineBallMovement();
 };
+
+void mouseClicked() {
+    gameStarted = true;
+}
+
+const determineBallMovement = function() {
+    if (gameStarted) {
+        ballXPosition = ballXPosition + ballXAxisSpeed;
+        ballYPosition = ballYPosition + ballYAxisSpeed;
+    } else {
+        ballYPosition = padYPossition - ballRadioLength + 8;
+        ballXPosition = mouseX;
+    }
+}
 
 const drawBall = function() {
     fill(255, 255, 255);
