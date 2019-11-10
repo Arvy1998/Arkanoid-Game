@@ -1,6 +1,6 @@
 const canvasWidth = 1520;
 const canvasHeight = 720;
-const ballRadioLength = 24;
+const ballRadioLength = 14;
 let ballXPosition = 500;
 let ballYPosition = 300;
 let ballXAxisSpeed = 6;
@@ -30,7 +30,7 @@ void draw() {
 };
 
 const drawBall = function() {
-    fill(0, 255, 0);
+    fill(255, 255, 255);
     ellipse(ballXPosition, ballYPosition, ballRadioLength, ballRadioLength);
     controlBall();
 }
@@ -58,8 +58,7 @@ const isBallHitFloor = function() {
 }
 
 const isBallHitCeiling = function() {
-    if ((ballYPosition - ballRadioLength / 2 <= 0)
-    || (ballYPosition + ballRadioLength / 2 >= canvasHeight)) {
+    if (ballYPosition - ballRadioLength / 2 <= 0) {
         return true;
     }
     return false;
@@ -85,7 +84,7 @@ const controlBall = function() {
     }
 
     if (isBallHitCeiling()) {
-        ballXAxisSpeed = ballXAxisSpeed * -1;
+        ballYAxisSpeed = ballYAxisSpeed * -1;
     }
 }
 
@@ -97,16 +96,22 @@ const controlPad = function() {
 }
 
 const controlBallSpeed = function() {
-    if (ballYPosition + ballRadioLength < padWidth / 3) {
-        ballYAxisSpeed = -7;
-    } else if ((ballYPosition + ballRadioLength > padWidth / 3)
-        && (ballYPosition + ballRadioLength < padWidth / 2)) {
-        ballYAxisSpeed = -5;  
-    } else ballYAxisSpeed = -7;
+    if ((ballXPosition + ballRadioLength / 2 >= mouseX - padWidth / 2)
+    && (ballXPosition + ballRadioLength / 2 <= (mouseX - padWidth / 2) + padWidth / 3)) {
+        ballYAxisSpeed = -6;
+        ballXAxisSpeed = -5;
+    } else if ((ballXPosition + ballRadioLength / 2 >= (mouseX - padWidth / 2) + padWidth / 3)
+        && (ballXPosition + ballRadioLength <= (mouseX - padWidth / 2) + ((padWidth * 2) / 3))) {
+        ballYAxisSpeed = -8;
+        ballXAxisSpeed = -2;
+    } else { 
+        ballYAxisSpeed = -6;
+        ballXAxisSpeed = 5;
+    }
 }
 
 const drawBricks = function() {
-    for (let i = 0; i < numberOfBricksRows; i++) {
+    for (let i = 0; i < numberOfBricksRows - 1; i++) {
         for (let j = 0; j < numberOfBricksCollumns; j++) {
             placeAndHideBricks(i, j);
         }
@@ -114,26 +119,45 @@ const drawBricks = function() {
 }
 
 const placeAndHideBricks = function(i, j) {
-    if (brickMap[i][j] === true) {
-        if ((ballXPosition + ballRadioLength / 2 >= brickWidth * i)
-          && (ballXPosition + ballRadioLength / 2 <= brickWidth * (i + 1))
+    if (brickMap[i][j] >= 0 && brickMap[i][j] !== null) {
+        if (((ballXPosition + ballRadioLength / 2 >= brickWidth * i)
+          && (ballXPosition - ballRadioLength / 2 <= brickWidth * (i + 1))
           && (ballYPosition + ballRadioLength / 2 >= brickHeight * j)
-          && (ballYPosition + ballRadioLength / 2 <= brickHeight * (j + 1))) {
+          && (ballYPosition - ballRadioLength / 2 <= brickHeight * (j + 1)))
+           || ((ballYPosition + ballRadioLength / 2 >= brickHeight * j)
+                && (ballYPosition + ballRadioLength / 2 <= brickHeight * (j + 1))
+                && (ballXPosition + ballRadioLength / 2 >= brickWidth * i)
+                && (ballXPosition + ballRadioLength / 2 <= brickWidth * (i + 1)))
+        ) {
             ballYAxisSpeed = ballYAxisSpeed * -1;
-            brickMap[i][j] = false;
+            brickMap[i][j]--;
         } else {
-            fill(0, 255, 0);
-            rect((brickWidth * i), (brickHeight * j), brickWidth - 1, brickHeight - 1);
+            if (brickMap[i][j] === 0) {
+                fill(0, 255, 0);
+                rect((brickWidth * i), (brickHeight * j), brickWidth - 1, brickHeight - 1);
+            } else if (brickMap[i][j] === 1) {
+                fill(0, 140, 0);
+                rect((brickWidth * i), (brickHeight * j), brickWidth - 1, brickHeight - 1);
+            } else if (brickMap[i][j] === 2) {
+                fill(0, 90, 0);
+                rect((brickWidth * i), (brickHeight * j), brickWidth - 1, brickHeight - 1);
+            } else if (brickMap[i][j] === 3) {
+                fill(0, 30, 0);
+                rect((brickWidth * i), (brickHeight * j), brickWidth - 1, brickHeight - 1);
+            }
         }
     }
 }
 
 const initBrickMap = function() {
-    let matrix = createMatrix(numberOfBricksRows, numberOfBricksCollumns);
-    for (let i = 0; i < numberOfBricksRows; i++) {
-        for (let j = 0; j < numberOfBricksCollumns; j++) {
-            matrix[i][j] = true;
+    let matrix = createMatrix(numberOfBricksRows - 1, numberOfBricksCollumns);
+    let brickLevel = 3;
+    for (let i = 1; i < numberOfBricksRows - 1; i++) {
+        for (let j = 1; j < numberOfBricksCollumns; j++) {
+            matrix[i][j] = brickLevel;
+            brickLevel--;
         }
+        brickLevel = 3;
     }
     brickMap = matrix;
 }
