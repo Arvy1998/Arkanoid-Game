@@ -145,6 +145,9 @@ const placeAndHideBricks = function(i, j) {
         ) {
             ballYAxisSpeed = ballYAxisSpeed * -1;
             brickMap[i][j]--;
+            if (isGameEnded()) {
+                if (confirm('Well played!')) window.location.reload();
+            };
         } else {
             if (brickMap[i][j] === 0) {
                 fill(0, 255, 0);
@@ -184,14 +187,13 @@ const createMatrix = function(rows, columns) {
     return emptyMatrix;
 }
 
-const endGame = function() {
-    let stateOfMap = [];
+const isGameEnded = function() {
     brickMap.forEach(row => {
-        stateOfMap.push(row.some(rowValue => rowValue < 0));
+        row.forEach(element => {
+            if (element > 0) {
+                return false;
+            }
+        })
     });
-    if (stateOfMap.some(mapElement => mapElement === true)) {
-        if (confirm('Well played!')) {
-            window.location.reload();
-        } 
-    }
+    return true;
 }
