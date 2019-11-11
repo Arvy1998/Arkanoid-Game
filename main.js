@@ -9,7 +9,7 @@ let padWidth = 150;
 let padHeight = 5;
 let padXPossition = (canvasWidth / 2) - (padWidth / 2);
 let padYPossition = canvasHeight - 25;
-let brickHeight = 30;
+let brickHeight = 60;
 let numberOfBricksRows = 12;
 let brickWidth = (canvasWidth / numberOfBricksRows);
 let numberOfBricksCollumns = 4;
@@ -138,10 +138,6 @@ const placeAndHideBricks = function(i, j) {
           && (ballXPosition - ballRadioLength / 2 <= brickWidth * (i + 1))
           && (ballYPosition + ballRadioLength / 2 >= brickHeight * j)
           && (ballYPosition - ballRadioLength / 2 <= brickHeight * (j + 1)))
-           || ((ballYPosition + ballRadioLength / 2 >= brickHeight * j)
-                && (ballYPosition + ballRadioLength / 2 <= brickHeight * (j + 1))
-                && (ballXPosition + ballRadioLength / 2 >= brickWidth * i)
-                && (ballXPosition + ballRadioLength / 2 <= brickWidth * (i + 1)))
         ) {
             ballYAxisSpeed = ballYAxisSpeed * -1;
             brickMap[i][j]--;
