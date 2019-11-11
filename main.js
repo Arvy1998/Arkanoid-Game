@@ -139,7 +139,10 @@ const placeAndHideBricks = function(i, j) {
           && (ballYPosition + ballRadioLength / 2 >= brickHeight * j)
           && (ballYPosition - ballRadioLength / 2 <= brickHeight * (j + 1)))
         ) {
-            ballYAxisSpeed = ballYAxisSpeed * -1;
+            if ((ballXPosition - ballRadioLength / 2 >= brickWidth * i)
+            && (ballXPosition + ballRadioLength / 2 <= brickWidth * (i + 1))) {
+                ballYAxisSpeed = ballYAxisSpeed * -1;
+            } else ballXAxisSpeed = ballXAxisSpeed * -1;
             brickMap[i][j]--;
             if (isGameEnded()) {
                 if (confirm('Well played!')) window.location.reload();
