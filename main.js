@@ -183,3 +183,15 @@ const createMatrix = function(rows, columns) {
     }
     return emptyMatrix;
 }
+
+const endGame = function() {
+    let stateOfMap = [];
+    brickMap.forEach(row => {
+        stateOfMap.push(row.some(rowValue => rowValue < 0));
+    });
+    if (stateOfMap.some(mapElement => mapElement === true)) {
+        if (confirm('Well played!')) {
+            window.location.reload();
+        } 
+    }
+}
