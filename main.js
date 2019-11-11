@@ -188,12 +188,12 @@ const createMatrix = function(rows, columns) {
 }
 
 const isGameEnded = function() {
-    brickMap.forEach(row => {
-        row.forEach(element => {
-            if (element > 0) {
+    for (let i = 1; i < numberOfBricksRows - 1; i++) {
+        for (let j = 1; j < numberOfBricksCollumns; j++) {
+            if (brickMap[i][j] > 0) {
                 return false;
             }
-        })
-    });
+        };
+    };
     return true;
 }
